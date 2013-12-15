@@ -6,10 +6,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import retrofit.RestAdapter;
+import android.service.wallpaper.WallpaperService.Engine;
 import de.halfreal.model.Track;
 import de.halfreal.net.API;
+import de.halfreal.net.TrackService;
 import de.halfreal.test.net.TrackServiceSync;
 import de.halfreal.test.robolectric.RobolectricMavenTestRunner;
+import de.halfreal.ui.SoundwaveApplication;
+import de.halfreal.ui.SoundwaveWalpaperService;
 
 @RunWith(RobolectricMavenTestRunner.class)
 public class TracksServiceTest {
@@ -21,6 +25,28 @@ public class TracksServiceTest {
 				.build();
 
 		return restAdapter.create(TrackServiceSync.class);
+
+	}
+
+	public TrackService createMockTrackServiceAsync() {
+
+		RestAdapter restAdapter = new RestAdapter.Builder()
+				.setServer(API.SOUNDCLOUD_URL).setClient(new MockClient())
+				.build();
+
+		return restAdapter.create(TrackService.class);
+
+	}
+
+	@Test
+	public void downloadImage() {
+		SoundwaveApplication soundwaveApplication = new SoundwaveApplication();
+		soundwaveApplication.onCreate();
+		SoundwaveApplication.trackService = createMockTrackServiceAsync();
+
+		SoundwaveWalpaperService soundwaveWalpaperService = new SoundwaveWalpaperService();
+		soundwaveWalpaperService.onCreate();
+		Engine onCreateEngine = soundwaveWalpaperService.onCreateEngine();
 
 	}
 
@@ -37,4 +63,5 @@ public class TracksServiceTest {
 		assertEquals("http://w1.sndcdn.com/MEkayzDwTueX_m.png",
 				tracks[0].getWaveform_url());
 	}
+
 }
