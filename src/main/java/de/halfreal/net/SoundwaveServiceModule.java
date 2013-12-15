@@ -6,8 +6,8 @@ import java.util.Set;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import android.util.Log;
 import de.halfreal.model.Track;
-import de.halfreal.model.TrackResponse;
 import de.halfreal.ui.SoundwaveApplication;
 
 public class SoundwaveServiceModule {
@@ -27,16 +27,17 @@ public class SoundwaveServiceModule {
 	public void downloadNewWaveform() {
 
 		SoundwaveApplication.trackService.tracks(API.CLIENT_ID, "zoekeating",
-				new Callback<TrackResponse>() {
+				new Callback<Track[]>() {
+
+					private String tag = this.getClass().getName();
 
 					public void failure(RetrofitError error) {
+						Log.e(tag, "Faild: " + error.getLocalizedMessage());
 					}
 
-					public void success(TrackResponse trackResponse,
-							Response response) {
+					public void success(Track[] tracks, Response response) {
 
-						Track track = trackResponse.getTracks()[(int) (Math
-								.random() * trackResponse.getTracks().length)];
+						Track track = tracks[(int) (Math.random() * tracks.length)];
 
 						for (SoundwaveModuleListener listener : listeners) {
 							listener.newTrackReceived(track);
@@ -47,10 +48,12 @@ public class SoundwaveServiceModule {
 	}
 
 	public void registerListener(SoundwaveModuleListener listener) {
+		System.out.println("registered listener");
 		listeners.add(listener);
 	}
 
 	public void unregisterListener(SoundwaveModuleListener listener) {
+		System.out.println("unregistered listener");
 		listeners.remove(listener);
 	}
 
