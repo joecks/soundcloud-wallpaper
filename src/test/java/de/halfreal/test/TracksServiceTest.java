@@ -8,11 +8,22 @@ import org.junit.runner.RunWith;
 import retrofit.RestAdapter;
 import de.halfreal.model.Track;
 import de.halfreal.net.API;
+import de.halfreal.test.net.DownloadServiceSync;
 import de.halfreal.test.net.TrackServiceSync;
 import de.halfreal.test.robolectric.RobolectricMavenTestRunner;
 
 @RunWith(RobolectricMavenTestRunner.class)
 public class TracksServiceTest {
+
+	public DownloadServiceSync createDownloadTrackService() {
+
+		RestAdapter restAdapter = new RestAdapter.Builder()
+				.setServer(API.SOUNDCLOUD_URL).setClient(new MockClient())
+				.build();
+
+		return restAdapter.create(DownloadServiceSync.class);
+
+	}
 
 	public TrackServiceSync createMockTrackService() {
 
@@ -22,6 +33,14 @@ public class TracksServiceTest {
 
 		return restAdapter.create(TrackServiceSync.class);
 
+	}
+
+	@Test
+	public void downloadImage() throws InterruptedException {
+		DownloadServiceSync createMockTrackService = createDownloadTrackService();
+		byte[] image = createMockTrackService
+				.downloadImage("http://w1.sndcdn.com/MEkayzDwTueX_m.png");
+		assertNotNull(image);
 	}
 
 	@Test
