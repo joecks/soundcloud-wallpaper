@@ -1,18 +1,40 @@
 package de.halfreal.ui;
 
-import android.provider.ContactsContract.CommonDataKinds.Photo;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.service.wallpaper.WallpaperService;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Picasso.LoadedFrom;
+import com.squareup.picasso.Target;
+
+import de.halfreal.model.Track;
 import de.halfreal.net.SoundwaveServiceModule.SoundwaveModuleListener;
 
 public class SoundwaveWalpaperService extends WallpaperService implements
 		SoundwaveModuleListener {
 
-	private class SoundwaveEngine extends Engine {
+	private class SoundwaveEngine extends Engine implements Target {
+
+		private Bitmap waveBitmap;
+
+		public void onBitmapFailed(Drawable arg0) {
+		}
+
+		public void onBitmapLoaded(Bitmap arg0, LoadedFrom arg1) {
+			waveBitmap = arg0;
+		}
+
+		public void onPrepareLoad(Drawable arg0) {
+		}
 
 	}
 
-	public void newPhotoReceived(Photo photo) {
+	private SoundwaveEngine engine;
 
+	public void newTrackReceived(Track track) {
+		Picasso.with(getApplicationContext()).load(track.getWaveform_url())
+				.into(engine);
 	}
 
 	@Override
@@ -24,7 +46,8 @@ public class SoundwaveWalpaperService extends WallpaperService implements
 
 	@Override
 	public Engine onCreateEngine() {
-		return new SoundwaveEngine();
+		engine = new SoundwaveEngine();
+		return engine;
 	}
 
 	@Override
