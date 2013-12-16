@@ -19,14 +19,16 @@ public class SoundwaveServiceModule {
 	}
 
 	private Set<SoundwaveModuleListener> listeners;
+	private String user;
 
 	public SoundwaveServiceModule() {
 		listeners = new HashSet<SoundwaveModuleListener>();
+		user = "zoekeating";
 	}
 
 	public void downloadNewWaveform() {
 
-		SoundwaveApplication.trackService.tracks(API.CLIENT_ID, "zoekeating",
+		SoundwaveApplication.trackService.tracks(API.CLIENT_ID, user,
 				new Callback<Track[]>() {
 
 					private String tag = this.getClass().getName();
@@ -50,6 +52,10 @@ public class SoundwaveServiceModule {
 	public void registerListener(SoundwaveModuleListener listener) {
 		System.out.println("registered listener");
 		listeners.add(listener);
+	}
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	public void unregisterListener(SoundwaveModuleListener listener) {

@@ -7,5 +7,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="wallpaper_service_label">"Sound Wave Wallpaper "</string>
     <string name="wallpaper_service_description">Showing a random soundwave of a random artist.</string>
+    <string name="click_to_open">Click to open.</string>
 
 </resources>

@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Shader;
+import android.graphics.Shader.TileMode;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -17,6 +20,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.LoadedFrom;
 import com.squareup.picasso.Target;
 
+import de.halfreal.R;
 import de.halfreal.model.Track;
 import de.halfreal.net.SoundwaveServiceModule.SoundwaveModuleListener;
 
@@ -28,22 +32,35 @@ public class SoundwaveWalpaperService extends WallpaperService {
 		private static final int STATE_BROWSER = 2;
 		private static final int STATE_NONE = 0;
 		private static final int STATE_TITLE = 1;
+		private Paint backgroundPaint;
 		private Rect dst;
 		private Handler handler;
-		private int height;
 
-		private Paint paint;
+		private int height;
 
 		private Runnable redrawRunable;
 		private int state;
+		private Paint textPaint;
 		private Track track;
 		private Bitmap waveBitmap;
+		private Paint wavePaint;
 		private int width;
 		private int xPixelOffset;
 
 		public SoundwaveEngine() {
-			paint = new Paint();
-			paint.setColor(Color.WHITE);
+			textPaint = new Paint();
+			textPaint.setColor(Color.WHITE);
+
+			backgroundPaint = new Paint();
+			Shader sunriseGradiant = new LinearGradient(0, 0, 0, 500f,
+					new int[] { Color.parseColor("#FF7300"),
+							Color.parseColor("#FF3700") },
+					new float[] { 0, 1 }, TileMode.CLAMP);
+			backgroundPaint.setDither(true);
+			backgroundPaint.setShader(sunriseGradiant);
+
+			wavePaint = new Paint();
+			backgroundPaint.setDither(true);
 
 			handler = new Handler();
 			redrawRunable = new Runnable() {
@@ -121,8 +138,6 @@ public class SoundwaveWalpaperService extends WallpaperService {
 				state = (state + 1) % 3;
 				refresh();
 			}
-			System.out.println("Touch " + event);
-			System.out.println("DST " + dst);
 		}
 
 		private void recycleBitmap() {
@@ -143,12 +158,19 @@ public class SoundwaveWalpaperService extends WallpaperService {
 							waveBitmap.getHeight());
 					dst = new Rect(0, height / 2 - src.height() / 2, width,
 							height / 2 + src.height() / 2);
-					canvas.drawBitmap(waveBitmap, src, dst, paint);
+					canvas.drawRect(0, 0, dst.right, dst.bottom,
+							backgroundPaint);
+					canvas.drawBitmap(waveBitmap, src, dst, wavePaint);
 
 					if (state >= STATE_TITLE) {
 						canvas.drawText(String.format("%s - %s", track
 								.getUser().getUsername(), track.getTitle()),
-								20, dst.bottom + 20, paint);
+								20, dst.bottom + 20, textPaint);
+					}
+
+					if (state == STATE_BROWSER) {
+						canvas.drawText(getString(R.string.click_to_open), 20,
+								dst.bottom + 40, textPaint);
 					}
 				}
 			} finally {
