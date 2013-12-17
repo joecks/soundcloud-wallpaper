@@ -13,7 +13,7 @@ import de.halfreal.net.TrackService;
 import de.halfreal.test.net.TrackServiceSync;
 import de.halfreal.test.robolectric.RobolectricMavenTestRunner;
 import de.halfreal.ui.SoundwaveApplication;
-import de.halfreal.ui.SoundwaveWalpaperService;
+import de.halfreal.ui.SoundwaveWallpaperService;
 
 @RunWith(RobolectricMavenTestRunner.class)
 public class TracksServiceTest {
@@ -44,7 +44,7 @@ public class TracksServiceTest {
 		soundwaveApplication.onCreate();
 		SoundwaveApplication.trackService = createMockTrackServiceAsync();
 
-		SoundwaveWalpaperService soundwaveWalpaperService = new SoundwaveWalpaperService();
+		SoundwaveWallpaperService soundwaveWalpaperService = new SoundwaveWallpaperService();
 		soundwaveWalpaperService.onCreate();
 		Engine onCreateEngine = soundwaveWalpaperService.onCreateEngine();
 

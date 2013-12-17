@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Maven Quickstart</string>
+    <string name="app_name">Soundwave Wallpaper</string>
     <string name="hello">Hello soundcloud!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="wallpaper_service_label">"Sound Wave Wallpaper "</string>
     <string name="wallpaper_service_description">Showing a random soundwave of a random artist.</string>
     <string name="click_to_open">Click to open.</string>
+    <string name="key_userName">userName</string>
 
 </resources>

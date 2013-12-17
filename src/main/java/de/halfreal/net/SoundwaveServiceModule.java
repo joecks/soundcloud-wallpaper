@@ -23,7 +23,6 @@ public class SoundwaveServiceModule {
 
 	public SoundwaveServiceModule() {
 		listeners = new HashSet<SoundwaveModuleListener>();
-		user = "zoekeating";
 	}
 
 	public void downloadNewWaveform() {
@@ -38,11 +37,12 @@ public class SoundwaveServiceModule {
 					}
 
 					public void success(Track[] tracks, Response response) {
+						if (tracks != null && tracks.length > 0) {
+							Track track = tracks[(int) (Math.random() * tracks.length)];
 
-						Track track = tracks[(int) (Math.random() * tracks.length)];
-
-						for (SoundwaveModuleListener listener : listeners) {
-							listener.newTrackReceived(track);
+							for (SoundwaveModuleListener listener : listeners) {
+								listener.newTrackReceived(track);
+							}
 						}
 					}
 				});

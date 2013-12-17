@@ -24,7 +24,7 @@ import de.halfreal.R;
 import de.halfreal.model.Track;
 import de.halfreal.net.SoundwaveServiceModule.SoundwaveModuleListener;
 
-public class SoundwaveWalpaperService extends WallpaperService {
+public class SoundwaveWallpaperService extends WallpaperService {
 
 	private class SoundwaveEngine extends Engine implements Target,
 			SoundwaveModuleListener {
@@ -77,16 +77,14 @@ public class SoundwaveWalpaperService extends WallpaperService {
 			this.track = track;
 			state = STATE_NONE;
 			Picasso.with(getApplicationContext()).load(track.getWaveform_url())
-					.into(this);
+					.error(R.drawable.soundwave).into(this);
 		}
 
 		public void onBitmapFailed(Drawable arg0) {
 		}
 
 		public void onBitmapLoaded(Bitmap newBitmap, LoadedFrom arg1) {
-			recycleBitmap();
 			waveBitmap = newBitmap;
-
 			refresh();
 		}
 
@@ -101,7 +99,6 @@ public class SoundwaveWalpaperService extends WallpaperService {
 		@Override
 		public void onDestroy() {
 			super.onDestroy();
-			recycleBitmap();
 			SoundwaveApplication.soundwaveModule.unregisterListener(this);
 		}
 
@@ -137,12 +134,6 @@ public class SoundwaveWalpaperService extends WallpaperService {
 				}
 				state = (state + 1) % 3;
 				refresh();
-			}
-		}
-
-		private void recycleBitmap() {
-			if (waveBitmap != null) {
-				waveBitmap.recycle();
 			}
 		}
 
